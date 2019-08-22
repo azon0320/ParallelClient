@@ -1,0 +1,5 @@
+# General ParallelWorld Setting
+
+# Banned from sending modified blocks to Java Edition chunk
+# 改变虚拟区块的方块时不会发送WorldSetPacket包,并取消事件
+chunk_readonly: false

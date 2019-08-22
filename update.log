@@ -1,0 +1,10 @@
+0.3.8
+添加方块更新 @pocketmine\block
+增加设置时间数据包 @protocol\WorldTimePacket
+增加世界方块放置的重力属性 @protocol\WorldSetBlockPacket
+增加序列对象readInt()方法 @instance\ByteSequence
+添加多个调试
+
+0.3.9
+修复更新周围方块 @ParallelUtil::updateAroundNonEvent
+箱子，陷阱箱，藤蔓，暂时不可用 @pocketmine\ParallelBlocks

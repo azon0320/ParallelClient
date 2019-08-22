@@ -1,0 +1,7 @@
+name: ParallelClient
+main: cn\dormao\mcpe\parallelclient\pocketmine\Main
+version: 1.0.0
+api: 1.0.0
+load: STARTUP
+author: Parallel Building
+description: Parallel Client
