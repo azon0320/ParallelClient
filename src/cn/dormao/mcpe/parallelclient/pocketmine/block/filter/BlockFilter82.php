@@ -34,6 +34,9 @@ use cn\dormao\mcpe\parallelclient\pocketmine\block\ParallelTorch;
 use cn\dormao\mcpe\parallelclient\pocketmine\block\ParallelWallSign;
 use cn\dormao\mcpe\parallelclient\pocketmine\block\ParallelWood;
 use cn\dormao\mcpe\parallelclient\pocketmine\block\ParallelWood2;
+use cn\dormao\mcpe\parallelclient\pocketmine\block2\Block2Helper82;
+use pocketmine\block\Block;
+use pocketmine\block\Flowable;
 use pocketmine\block\Slab;
 
 class BlockFilter82 extends BlockHelper
@@ -55,11 +58,13 @@ class BlockFilter82 extends BlockHelper
         return self::$inbound;
     }
 
-    public static function getPlacingErrorBlock()
-    {
-        return [
-            106,
-        ];
+    public static function canPlace(Block $b){
+        $f = !($b instanceof Flowable);
+        switch ($b->getId()){
+            case 106: #VINE
+                $f = false;
+        }
+        return $f;
     }
 
     public static function registerSupportedBlocks()
@@ -155,6 +160,11 @@ class BlockFilter82 extends BlockHelper
         self::$outbound[self::blockhash(self::QUARTZ_BLOCK,5)] = self::blockhash(self::QUARTZ_BLOCK, 1);
     }
 
+    /**
+     * @param $peId
+     * @param $pemeta
+     * @return int[]
+     */
     public static function filtOutbound($peId, $pemeta)
     {
         $out = [$peId, $pemeta];
@@ -166,6 +176,11 @@ class BlockFilter82 extends BlockHelper
         return $out;
     }
 
+    /**
+     * @param $javaId
+     * @param $javaMeta
+     * @return int[]
+     */
     public static function filtInbound($javaId, $javaMeta)
     {
         $out = [$javaId, $javaMeta];

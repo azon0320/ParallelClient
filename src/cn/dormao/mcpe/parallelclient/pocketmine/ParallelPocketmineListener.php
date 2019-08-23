@@ -18,6 +18,7 @@ use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\block\BlockUpdateEvent;
 use pocketmine\event\EventPriority;
 use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerItemHeldEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\plugin\MethodEventExecutor;
 use pocketmine\plugin\PluginManager;
@@ -44,17 +45,18 @@ class ParallelPocketmineListener implements Listener
         $client = $this->parallel()->getParallelClientInstance($e->getBlock()->getLevel());
         if ($client != null) {
             $block = $e->getBlock();
-            if (!in_array($block->getId(), BlockFilter82::getPlacingErrorBlock())) {
-                if (!$block instanceof ParallelPocketmineBlock || $block->canProcessEvent()) {
-                        $blockdat = ParallelBlocks::filterBlock0_15_4Out($block->getId(), $block->getDamage());
-                        $pk = new WorldSetBlockPacket();
-                        $pk->id = $blockdat[0];
-                        $pk->meta = $blockdat[1];
-                        $pk->pos = $block->add(0, 0, 0);
-                        var_dump(sprintf("BlockPlace(%d,%d,%d)[%d:%d]", $block->getX(), $block->getY(), $block->getZ(), $pk->id, $pk->meta));
-                        $client->sendParallelPacket($pk);
-                }
-            }else $e->setCancelled();
+            $send = true;
+            if (!($block instanceof ParallelPocketmineBlock)) {
+                if (!BlockFilter82::canPlace($block)){ $e->setCancelled();$send = false;}
+            }else if (!$block->canProcessEvent()) $send = false;
+            if ($send) {
+                $blockdat = ParallelBlocks::filterBlock0_15_4Out($block->getId(), $block->getDamage());
+                $pk = new WorldSetBlockPacket();
+                $pk->id = $blockdat[0];
+                $pk->meta = $blockdat[1];
+                $pk->pos = $block->add(0, 0, 0);
+                $client->sendParallelPacket($pk);
+            }
         }
     }
 

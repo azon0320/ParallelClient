@@ -35,7 +35,6 @@ abstract class ParallelBlocks extends BlockHelper implements ParallelPocketmineB
         if ($player->getLevel()->getProvider() instanceof ParallelClient) {
             $server = $player->getServer();
             $block = $target->getLevel()->getBlock($blockPos);
-            #var_dump(sprintf("Block{%s}", $block->__toString()));
             if ($block instanceof ParallelPocketmineBlock) $block->setPlaced();
             $server->getPluginManager()->callEvent(new BlockPlaceEvent($player, $block, $block, $target, $item));
         }

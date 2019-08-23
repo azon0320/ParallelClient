@@ -11,6 +11,8 @@ use cn\dormao\mcpe\parallelclient\pocketmine\block\ParallelBlocks;
 use cn\dormao\mcpe\parallelclient\pocketmine\netbase\Netbase;
 use cn\dormao\mcpe\parallelclient\pocketmine\netbase\NetbaseGenerator;
 use cn\dormao\mcpe\parallelclient\protocol\AbstractParallelPacket;
+use pocketmine\block\Block;
+use pocketmine\block\Flowable;
 use pocketmine\level\format\LevelProvider;
 use pocketmine\level\format\LevelProviderManager;
 use pocketmine\level\generator\Generator;

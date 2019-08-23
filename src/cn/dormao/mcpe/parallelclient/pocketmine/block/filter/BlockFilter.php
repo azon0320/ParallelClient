@@ -4,6 +4,7 @@
 namespace cn\dormao\mcpe\parallelclient\pocketmine\block\filter;
 
 
+use pocketmine\block\Block;
 use pocketmine\block\BlockIds;
 
 interface BlockFilter extends BlockIds
@@ -21,7 +22,7 @@ interface BlockFilter extends BlockIds
     static function filtInbound($javaId, $javaMeta);
     static function filtOutbound($peId, $peMeta);
 
-    static function getPlacingErrorBlock();
+    static function canPlace(Block $b);
 
     static function registerSupportedBlocks();
 }

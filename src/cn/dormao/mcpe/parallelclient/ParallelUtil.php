@@ -113,13 +113,30 @@ abstract class ParallelUtil
      * Generator中的Block::init()仅在线程生命周期有效，并不影响到主线程的Block Class表
      * @param int 方块Id
      * @param string 修改的方块Class
+     * @param bool 是否修改 Block::$list & Item::$list 简化表
      */
-    public static function forceRegisterBlock($id, $blockclass){
-        Block::$list[$id] = $blockclass;
-        for($data = 0; $data < 16; ++$data){
+    public static function forceRegisterBlock($id, $blockclass, $registerBlockList = true){
+        if ($registerBlockList) {
+            self::forceRegisterCustomBaseList($id,$blockclass);
+        }
+        for ($data = 0;$data < 16; ++$data){
             Block::$fullList[($id << 4) | $data] = new $blockclass($data);
         }
+    }
+
+    public static function forceRegisterCustomBaseList($id, $blockclass){
+        Block::$list[$id] = $blockclass;
         Item::$list[$id] = $blockclass;
+    }
+
+    /**
+     * @param $id
+     * @param $blockclassName
+     */
+    public static function forceRegisterCustomBlockFullList($id,$blockclassName){
+        for ($data = 0;$data < 16; ++$data){
+            Block::$fullList[($id << 4) | $data] = new $blockclassName($id,$data);
+        }
     }
 
     public static function updateAroundNonEvent(PluginManager $pm,Block $block){
