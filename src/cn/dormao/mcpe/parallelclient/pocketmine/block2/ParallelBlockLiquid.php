@@ -7,6 +7,11 @@ namespace cn\dormao\mcpe\parallelclient\pocketmine\block2;
 use cn\dormao\mcpe\parallelclient\pocketmine\block\ParallelPocketmineBlock;
 use pocketmine\block\Liquid;
 
+/**
+ * Class ParallelBlockLiquid
+ * @package cn\dormao\mcpe\parallelclient\pocketmine\block2
+ * @deprecated
+ */
 class ParallelBlockLiquid extends Liquid implements ParallelPocketmineBlock
 {
     public $placed = false;

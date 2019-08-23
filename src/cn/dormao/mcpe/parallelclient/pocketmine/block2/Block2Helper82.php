@@ -5,6 +5,11 @@ namespace cn\dormao\mcpe\parallelclient\pocketmine\block2;
 
 use cn\dormao\mcpe\parallelclient\ParallelUtil as A;
 
+/**
+ * Class Block2Helper82
+ * @package cn\dormao\mcpe\parallelclient\pocketmine\block2
+ * @deprecated 
+ */
 final class Block2Helper82 implements BlockFullId
 {
     public static function register($id, $class = ParallelBlockSolid::class){

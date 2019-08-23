@@ -11,6 +11,11 @@ use pocketmine\block\Solid;
 use pocketmine\item\Item;
 use pocketmine\Player;
 
+/**
+ * Class ParallelBlockSolid
+ * @package cn\dormao\mcpe\parallelclient\pocketmine\block2
+ * @deprecated
+ */
 class ParallelBlockSolid extends Solid implements ParallelPocketmineBlock
 {
     public $placed = false;

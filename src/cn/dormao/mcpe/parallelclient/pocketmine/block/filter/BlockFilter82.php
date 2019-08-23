@@ -36,6 +36,7 @@ use cn\dormao\mcpe\parallelclient\pocketmine\block\ParallelWood;
 use cn\dormao\mcpe\parallelclient\pocketmine\block\ParallelWood2;
 use cn\dormao\mcpe\parallelclient\pocketmine\block2\Block2Helper82;
 use pocketmine\block\Block;
+use pocketmine\block\Door;
 use pocketmine\block\Flowable;
 use pocketmine\block\Slab;
 
@@ -59,9 +60,11 @@ class BlockFilter82 extends BlockHelper
     }
 
     public static function canPlace(Block $b){
-        $f = !($b instanceof Flowable);
+        #TODO Door Process
+        $f = !($b instanceof Flowable) && !($b instanceof Door);
         switch ($b->getId()){
             case 106: #VINE
+            case 46: #TNT
                 $f = false;
         }
         return $f;
@@ -102,7 +105,6 @@ class BlockFilter82 extends BlockHelper
         #ParallelUtil::forceRegisterBlock(self::VINE,ParallelVine::class);
         #Skull Block needs NBT
         #ParallelUtil::forceRegisterBlock(self::SKULL_BLOCK, ParallelSkull::class);
-        //TODO Water physics update Exception
         self::registerInbound();self::registerOutbound();
     }
 
@@ -129,6 +131,7 @@ class BlockFilter82 extends BlockHelper
         self::$inbound[self::blockhash(self::DOUBLE_SLAB, Slab::NETHER_BRICK)] = self::blockhash(self::DOUBLE_SLAB, Slab::QUARTZ);
         self::$inbound[self::blockhash(self::QUARTZ_BLOCK, 4)] = self::blockhash(self::QUARTZ_BLOCK, 10);
         self::$inbound[self::blockhash(self::QUARTZ_BLOCK, 3)] = self::blockhash(self::QUARTZ_BLOCK, 6);
+        self::$inbound[self::blockhash(self::GRASS_PATH,0)] = self::blockhash(208, 0);
     }
 
     private static function registerOutbound(){
@@ -158,6 +161,7 @@ class BlockFilter82 extends BlockHelper
         self::$outbound[self::blockhash(self::QUARTZ_BLOCK,6)] = self::blockhash(self::QUARTZ_BLOCK, 3);
         self::$outbound[self::blockhash(self::QUARTZ_BLOCK,9)] = self::blockhash(self::QUARTZ_BLOCK, 1);
         self::$outbound[self::blockhash(self::QUARTZ_BLOCK,5)] = self::blockhash(self::QUARTZ_BLOCK, 1);
+        self::$outbound[self::blockhash(self::GRASS_PATH, 0)] = self::blockhash(208, 0);
     }
 
     /**

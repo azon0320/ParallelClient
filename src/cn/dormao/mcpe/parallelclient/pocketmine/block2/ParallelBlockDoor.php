@@ -7,6 +7,11 @@ namespace cn\dormao\mcpe\parallelclient\pocketmine\block2;
 use cn\dormao\mcpe\parallelclient\pocketmine\block\ParallelPocketmineBlock;
 use pocketmine\block\Door;
 
+/**
+ * Class ParallelBlockDoor
+ * @package cn\dormao\mcpe\parallelclient\pocketmine\block2
+ * @deprecated
+ */
 class ParallelBlockDoor extends Door implements ParallelPocketmineBlock
 {
     public $placed = false;

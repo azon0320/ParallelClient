@@ -87,6 +87,7 @@ class NetbaseChunk extends Chunk implements ParallelPocketmineChunk
 
     public function setBlock($x, $y, $z, $blockId = null, $meta = null)
     {
+        #最底层的BlockSet代码，在这里不再存在事件调用
         return parent::setBlock($x, $y, $z, $blockId, $meta); //do nothing
     }
 

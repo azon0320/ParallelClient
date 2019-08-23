@@ -4,6 +4,11 @@
 namespace cn\dormao\mcpe\parallelclient\pocketmine\block2;
 
 
+/**
+ * Class ParallelBlockThin
+ * @package cn\dormao\mcpe\parallelclient\pocketmine\block2
+ * @deprecated
+ */
 class ParallelBlockThin
 {
     public $placed = false;

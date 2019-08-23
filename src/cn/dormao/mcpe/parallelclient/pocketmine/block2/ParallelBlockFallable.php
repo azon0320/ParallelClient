@@ -7,6 +7,11 @@ namespace cn\dormao\mcpe\parallelclient\pocketmine\block2;
 use cn\dormao\mcpe\parallelclient\pocketmine\block\ParallelPocketmineBlock;
 use pocketmine\block\Fallable;
 
+/**
+ * Class ParallelBlockFallable
+ * @package cn\dormao\mcpe\parallelclient\pocketmine\block2
+ * @deprecated
+ */
 class ParallelBlockFallable extends Fallable implements ParallelPocketmineBlock
 {
     public $placed = false;
