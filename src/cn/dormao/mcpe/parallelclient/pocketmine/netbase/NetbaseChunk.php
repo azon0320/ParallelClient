@@ -4,9 +4,15 @@
 namespace cn\dormao\mcpe\parallelclient\pocketmine\netbase;
 
 
+use cn\dormao\mcpe\parallelclient\ParallelClient;
+use cn\dormao\mcpe\parallelclient\pocketmine\block\filter\BlockFilter82;
 use cn\dormao\mcpe\parallelclient\pocketmine\ParallelPocketmineChunk;
+use cn\dormao\mcpe\parallelclient\protocol\WorldSetBlockPacket;
+use pocketmine\event\block\BlockUpdateEvent;
 use pocketmine\level\format\LevelProvider;
 use pocketmine\level\format\mcregion\Chunk;
+use pocketmine\level\Level;
+use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\ByteTag;
 use pocketmine\nbt\tag\LongTag;
 
@@ -85,10 +91,51 @@ class NetbaseChunk extends Chunk implements ParallelPocketmineChunk
         parent::getBlock($x, $y, $z, $blockId, $meta);//do nothing
     }
 
-    public function setBlock($x, $y, $z, $blockId = null, $meta = null)
+    #
+    # Level会调用该方法
+    # XZYParallelChunk的apply过程不能发包否则发生循环错误
+    # 另外 , Generator会调用(send=true)的setBlock , 所以 NetbaseChunk 禁止用生成器生成
+    #
+    public function setBlock($x, $y, $z, $blockId = null, $meta = null, $send = true)
     {
         #最底层的BlockSet代码，在这里不再存在事件调用
-        return parent::setBlock($x, $y, $z, $blockId, $meta); //do nothing
+        if ($send) {
+            $id = $blockId == null ? 0 : $blockId;
+            $data = $meta == null ? 0 : $meta;
+            $pos = new Vector3(16 * $this->x + $x, $y, 16 * $this->z + $z);
+            if ($id != 0) {
+                $this->doNetworkPlace($pos, $id, $data);
+            } else {
+                $this->doNetworkBreak($pos);
+            }
+        }
+        return parent::setBlock($x, $y, $z, $blockId, $meta);
+    }
+
+    public function doNetworkPlace(Vector3 $vec, $id, $meta){
+        $ids = BlockFilter82::filtOutbound($id, $meta);
+        $pk = new WorldSetBlockPacket();
+        $pk->id = $ids[0];
+        $pk->meta = $ids[1];
+        $pk->pos = $vec;
+        $this->getProvider()->sendParallelPacket($pk);
+    }
+
+    public function doNetworkBreak(Vector3 $vec){
+        $pk = new WorldSetBlockPacket();
+        $pk->id = 0;
+        $pk->meta = 0;
+        $pk->pos = $vec;
+        $this->getProvider()->sendParallelPacket($pk);
+    }
+
+    /** @return ParallelClient */
+    public function getProvider()
+    {
+        if (!($this->provider instanceof ParallelClient)){
+            trigger_error("Netbased Chunk has non-ParallelClient Provider!");
+        }
+        return $this->provider;
     }
 
     public function getBlockSkyLight($x, $y, $z)

@@ -7,11 +7,11 @@ namespace cn\dormao\mcpe\parallelclient\instance;
 
 use cn\dormao\mcpe\parallelclient\ParallelChunk;
 use cn\dormao\mcpe\parallelclient\ParallelClient;
-use cn\dormao\mcpe\parallelclient\pocketmine\block\ParallelBlocks;
+use cn\dormao\mcpe\parallelclient\pocketmine\block\filter\BlockFilter82;
+use cn\dormao\mcpe\parallelclient\pocketmine\netbase\NetbaseChunk;
 use cn\dormao\mcpe\parallelclient\pocketmine\ParallelPocketmineBiome;
 use cn\dormao\mcpe\parallelclient\pocketmine\ParallelPocketmineChunk;
 use pocketmine\block\Block;
-use pocketmine\level\format\FullChunk;
 use pocketmine\level\generator\biome\Biome;
 
 class XZYParallelChunk implements ParallelChunk
@@ -190,7 +190,7 @@ class XZYParallelChunk implements ParallelChunk
         return $this->bool_blocks && $this->bool_metas;//&& $this->bool_biomes;
     }
 
-    public function pocketmineApply(FullChunk $c){
+    public function pocketmineApply(NetbaseChunk $c){
         $period = microtime(true);
         for ($x = 0;$x < self::MAX_X;$x++){
             for ($y =0;$y < $this->getMaxHeight();$y++){
@@ -198,12 +198,12 @@ class XZYParallelChunk implements ParallelChunk
                     $id = $this->getBlockIdXYZ($x,$y,$z);
                     if ($id != 0) {
                         $meta = $this->getBlockMetaXYZ($x, $y, $z);
+                        $ids = BlockFilter82::filtInbound($id, $meta);
                         if (isset(Block::$list[$id])) {
                             //$c->setBlock($x,$y,$z, $id == 0 ? null : $id, $meta == 0 ? null : $meta);
-                            $ids = ParallelBlocks::filterBlock0_15_4In($id, $meta);
-                            $c->setBlock($x, $y, $z, $ids[0],$ids[1]);
+                            $c->setBlock($x, $y, $z, $ids[0],$ids[1], false);
                         }else{
-                            $c->setBlock($x,$y,$z,1, 0);
+                            $c->setBlock($x,$y,$z,1, 0, false);
                         }
                         $biome = $this->getBlockBiomeAt($x, $z);
                         $color = Biome::getBiome(ParallelPocketmineBiome::filterBiome0_15_4($biome))->getColor();

@@ -60,11 +60,10 @@ class BlockFilter82 extends BlockHelper
     }
 
     public static function canPlace(Block $b){
-        #TODO Door Process
-        $f = !($b instanceof Flowable) && !($b instanceof Door);
+        $f = true;
         switch ($b->getId()){
             case 106: #VINE
-            case 46: #TNT
+            case 144: #Skull
                 $f = false;
         }
         return $f;
@@ -72,6 +71,7 @@ class BlockFilter82 extends BlockHelper
 
     public static function registerSupportedBlocks()
     {
+        /*
         ParallelUtil::forceRegisterBlock(self::TORCH, ParallelTorch::class);
         ParallelUtil::forceRegisterBlock(self::SIGN_POST, ParallelSign::class);
         ParallelUtil::forceRegisterBlock(self::WALL_SIGN, ParallelWallSign::class);
@@ -101,10 +101,7 @@ class BlockFilter82 extends BlockHelper
         ParallelUtil::forceRegisterBlock(self::WOOD, ParallelWood::class);
         ParallelUtil::forceRegisterBlock(self::WOOD2, ParallelWood2::class);
         ParallelUtil::forceRegisterBlock(self::FURNACE, ParallelFurnace::class);
-        #Vine is error placing on the solid block
-        #ParallelUtil::forceRegisterBlock(self::VINE,ParallelVine::class);
-        #Skull Block needs NBT
-        #ParallelUtil::forceRegisterBlock(self::SKULL_BLOCK, ParallelSkull::class);
+        */
         self::registerInbound();self::registerOutbound();
     }
 

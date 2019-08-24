@@ -15,6 +15,7 @@ use cn\dormao\mcpe\parallelclient\ParallelPacket;
 use cn\dormao\mcpe\parallelclient\ParallelTimings;
 use cn\dormao\mcpe\parallelclient\ParallelUtil;
 use cn\dormao\mcpe\parallelclient\pocketmine\block\ParallelBlocks;
+use cn\dormao\mcpe\parallelclient\pocketmine\block\ParallelPocketmineBlock;
 use cn\dormao\mcpe\parallelclient\pocketmine\ParallelPocketmineChunk;
 use cn\dormao\mcpe\parallelclient\protocol\AbstractParallelPacket;
 use cn\dormao\mcpe\parallelclient\protocol\action\entity\EntityActionPacket;
@@ -35,12 +36,14 @@ use cn\dormao\mcpe\parallelclient\protocol\WorldSetPacket;
 use cn\dormao\mcpe\parallelclient\protocol\WorldTimePacket;
 use pocketmine\block\Block;
 use pocketmine\block\WallSign;
+use pocketmine\event\block\BlockUpdateEvent;
 use pocketmine\level\format\FullChunk;
 use pocketmine\level\format\mcregion\Chunk;
 use pocketmine\level\format\mcregion\McRegion;
 use pocketmine\level\generator\Generator;
 use pocketmine\level\Level;
 use pocketmine\level\particle\DestroyBlockParticle;
+use pocketmine\level\Position;
 use pocketmine\math\Vector3;
 use pocketmine\nbt\NBT;
 use pocketmine\nbt\tag\ByteTag;
@@ -48,6 +51,7 @@ use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\IntTag;
 use pocketmine\nbt\tag\LongTag;
 use pocketmine\nbt\tag\StringTag;
+use pocketmine\network\protocol\UpdateBlockPacket;
 use pocketmine\utils\ChunkException;
 use pocketmine\utils\Config;
 
@@ -195,18 +199,20 @@ class Netbase extends McRegion implements ParallelClient
                 case ParallelPacket::PK_WORLD_SET_BLOCK:
                     /** @var WorldSetBlockPacket $pk */
                     $id = $pk->id;
+                    $blockdat = ParallelBlocks::filterBlock0_15_4In($id, $pk->meta);
                     if (isset(Block::$list[$id])){
-                        $blockdat = ParallelBlocks::filterBlock0_15_4In($id, $pk->meta);
                         $b = Block::get($blockdat[0]);$b->setDamage($blockdat[1]);
                         #TODO Serialize this statement
                         /** @deprecated  */
-                        $this->getLevel()->setBlock($pk->pos, $b, false, false);
-                        ParallelUtil::updateAroundNonEvent($this->getServer()->getPluginManager(),$b);
+                        $this->netbaseInboundSetBlock($pk->pos, $b);
+                        #$this->getLevel()->setBlock($pk->pos, $b, false, false);
+                        #ParallelUtil::updateAroundNonEvent($this->getServer()->getPluginManager(),$b);
                         #$this->getLevel()->addParticle(new DestroyBlockParticle($pk->pos, $b));
                     }else{
                         $b = $pk->fallingblock ? Block::get(Block::SAND) : Block::get(Block::STONE);
-                        $this->getLevel()->setBlock($pk->pos,$b,false,false);
-                        ParallelUtil::updateAroundNonEvent($this->getServer()->getPluginManager(),$b);
+                        #$this->getLevel()->setBlock($pk->pos,$b,false,false);
+                        #ParallelUtil::updateAroundNonEvent($this->getServer()->getPluginManager(),$b);
+                        $this->netbaseInboundSetBlock($pk->pos, $b);
                         $this->getServer()->getLogger()->warning(sprintf("[%s] Found unexpected block id : %d", $this->getRemoteWorld(), $pk->id));
                     }
                     break;
@@ -219,6 +225,13 @@ class Netbase extends McRegion implements ParallelClient
                 //TODO More Packets, process here
             }
         }
+    }
+
+    public function netbaseInboundSetBlock(Vector3 $fullv, Block $b){
+        $b->position(Position::fromObject($fullv, $this->getLevel()));
+        $this->getLevel()->setBlockIdAt($fullv->getX(),$fullv->getY(), $fullv->getZ(), $b->getId());
+        $this->getLevel()->setBlockDataAt($fullv->getX(),$fullv->getY(), $fullv->getZ(), $b->getDamage());
+        $this->getLevel()->sendBlocks($this->getLevel()->getChunkPlayers($fullv->getX() >> 4, $fullv->getZ() >> 4),[$b],UpdateBlockPacket::FLAG_ALL_PRIORITY);
     }
 
     //This method will be called in PluginTask via Scheduler(period=1)

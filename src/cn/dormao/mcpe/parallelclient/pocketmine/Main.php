@@ -23,6 +23,7 @@ class Main extends PluginBase implements ParallelPocketmine
 {
 
     const VERSION = "0.3.9";
+    const BRANCH_VERSION = "0.4.0";
 
     public function onLoad()
     {
@@ -37,7 +38,8 @@ class Main extends PluginBase implements ParallelPocketmine
         $this->saveDefaultConfig();
         $this->getServer()->getScheduler()->scheduleRepeatingTask(new TickTask($this), 1);
         $pm = $this->getServer()->getPluginManager();
-        (new ParallelPocketmineListener($this))->registerEvents($pm);
+        #(new ParallelPocketmineListener($this))->registerEvents($pm);
+        (new ParallelPocketmineListener2($this))->registerEvents($pm);
     }
 
     public function tick($tick){

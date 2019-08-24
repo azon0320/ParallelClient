@@ -4,6 +4,7 @@
 namespace cn\dormao\mcpe\parallelclient;
 
 
+use cn\dormao\mcpe\parallelclient\pocketmine\netbase\NetbaseChunk;
 use pocketmine\level\format\FullChunk;
 
 interface ParallelChunk
@@ -181,9 +182,9 @@ interface ParallelChunk
     function isChunkApplyReady();
 
     /**
-     * @param FullChunk $fchunk
+     * @param NetbaseChunk $fchunk
      */
-    function pocketmineApply(FullChunk $fchunk);
+    function pocketmineApply(NetbaseChunk $fchunk);
 
     function isApplied();
 
