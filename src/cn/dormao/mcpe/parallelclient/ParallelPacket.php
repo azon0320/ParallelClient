@@ -27,6 +27,7 @@ interface ParallelPacket
     const PK_CHUNK_RESPONSE_FASTBIN_METAS = 12;
     const PK_WORLD_SET_BLOCK = 15;
     const PK_WORLD_TIME = 16;
+    const PK_WORLD_WEATHER = 17;
 
     #EntityEvent TODO AllPackets
     const PK_ENTITY_SPAWN = 16;

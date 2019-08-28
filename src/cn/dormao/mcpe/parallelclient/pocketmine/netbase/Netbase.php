@@ -245,7 +245,7 @@ class Netbase extends McRegion implements ParallelClient
                         $this->processRaw($str);
                     }
                     $this->parallelSocket->tick();
-                    /** @var ParallelPocketmineChunk $chunk */
+                    /** @var NetbaseChunk $chunk */
                     foreach ($this->chunks as $chunk) {
                         if (!$chunk->isParallelChunkApplyed()) {
                             $cx = $chunk->getX();

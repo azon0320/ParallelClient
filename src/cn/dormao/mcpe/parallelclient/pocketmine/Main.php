@@ -22,11 +22,26 @@ use pocketmine\plugin\PluginBase;
 class Main extends PluginBase implements ParallelPocketmine
 {
 
+    public static $instance;
+
+    /**
+     * @return Main
+     */
+    public static function getInstance()
+    {
+        return self::$instance;
+    }
+    /** @return bool */
+    public static function DEBUG(){return self::getInstance()->debug;}
+
     const VERSION = "0.3.9";
     const BRANCH_VERSION = "0.4.0";
 
+    private $debug;
+
     public function onLoad()
     {
+        self::$instance = $this;
         LevelProviderManager::addProvider($this->getServer(), Netbase::class);
         Generator::addGenerator(NetbaseGenerator::class, Netbase::FORMAT_GENERATOR_TYPE);
         AbstractParallelPacket::registerAll();
@@ -36,6 +51,7 @@ class Main extends PluginBase implements ParallelPocketmine
     public function onEnable()
     {
         $this->saveDefaultConfig();
+        $this->debug = $this->getConfig()->get("debug", true);
         $this->getServer()->getScheduler()->scheduleRepeatingTask(new TickTask($this), 1);
         $pm = $this->getServer()->getPluginManager();
         #(new ParallelPocketmineListener($this))->registerEvents($pm);

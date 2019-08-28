@@ -1,5 +1,5 @@
 # General ParallelWorld Setting
-
-# Banned from sending modified blocks to Java Edition chunk
-# 改变虚拟区块的方块时不会发送WorldSetPacket包,并取消事件
-chunk_readonly: false
+#
+# Debug Mode
+# Debug 模式下, ParallelWorld 会输出不支持的方块, 或是更多信息
+debug: true
